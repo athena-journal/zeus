@@ -1,13 +1,19 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+
+	mongodb "github.com/athena-journal/zeus/mongodb"
+)
 
 func main() {
 	r := gin.Default()
 
-	r.GET("/ping", func(c *gin.Context) {
+	r.GET("/users", func(c *gin.Context) {
+		documents := mongodb.FindAll("users") // Get All User Documents
+
 		c.JSON(200, gin.H{
-			"message": "pong",
+			"data": documents,
 		})
 	})
 
