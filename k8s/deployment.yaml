@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zeus
+  namespace: athena-public
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: zeus
+  template:
+    metadata:
+      labels:
+        app: zeus
+    spec:
+      containers:
+        - name: zeus
+          image: athena/zeus:${TAG}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: zeus-svc
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500Mi"
+            requests:
+              cpu: "250m"
+              memory: "250Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zeus
+  namespace: athena-public
+spec:
+  selector:
+    app: zeus
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: zeus-svc
